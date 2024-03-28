@@ -24,7 +24,7 @@ jobs:
         with:
           length: 6
       - name: Rename file 
-        run: mv diploma.pdf ${{ github.event.repository.name }}_${{ steps.date.outputs.date }}.pdf
+        run: mv thesis.pdf ${{ github.event.repository.name }}_${{ steps.date.outputs.date }}.pdf
         
       - name: Upload document
         uses: actions/upload-artifact@v3
