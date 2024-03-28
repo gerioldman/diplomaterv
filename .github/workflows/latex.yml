@@ -15,7 +15,7 @@ jobs:
       - name: Compile LaTeX document
         uses: dante-ev/latex-action@latest
         with:
-          working_directory: .\doc
+          working_directory: doc
           root_file: thesis.tex
           args: -pdf -latexoption=-file-line-error -latexoption=-interaction=nonstopmode -shell-escape -bibtex -f
 
