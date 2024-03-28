@@ -13,3 +13,4 @@ jobs:
           with:
             action: test
             directory: build
+            meson-version: 1.4.0
