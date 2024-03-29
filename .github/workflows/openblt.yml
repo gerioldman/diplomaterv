@@ -9,8 +9,9 @@ jobs:
       steps:
         - uses: actions/checkout@v2
         - uses: actions/setup-python@v1
+        - run: apt install libusb-1.0-0
         - uses: BSFishy/meson-build@v1.0.3
           with:
-            action: test
+            action: build
             directory: build
             meson-version: 1.4.0
