@@ -4,12 +4,23 @@ on:
       branches: [ main ]
     workflow_dispatch :
 jobs:
-    build_on_host:
+    build_on_ubuntu:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
         - uses: actions/setup-python@v1
         - run: sudo apt-get install libusb-1.0.0-dev
+        - uses: BSFishy/meson-build@v1.0.3
+          with:
+            action: build
+            directory: build
+            meson-version: 1.4.0
+    build_on_windows:
+      runs-on: windows-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-python@v1
+        - uses: msys2/setup-msys2@v2
         - uses: BSFishy/meson-build@v1.0.3
           with:
             action: build
