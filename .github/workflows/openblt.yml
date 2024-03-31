@@ -15,7 +15,7 @@ jobs:
             action: build
             directory: build
             meson-version: 1.4.0
-    build_on_windows:
+    build_on_msys2:
       runs-on: windows-latest
       steps:
         - uses: actions/checkout@v2
@@ -25,4 +25,16 @@ jobs:
           with:
             action: build
             directory: build
+            meson-version: 1.4.0
+    build_stm32f4:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-python@v1
+        - uses: carlosperate/arm-none-eabi-gcc-action@v1
+        - uses: BSFishy/meson-build@v1.0.3
+          with:
+            action: build
+            directory: build
+            setup-options: --cross-file=arm-gcc-none-eabi.ini
             meson-version: 1.4.0

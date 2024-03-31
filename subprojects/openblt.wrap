@@ -2,3 +2,7 @@
 url = https://github.com/gerioldman/openblt.git
 revision = head
 depth = 1
+[provide]
+openblt_lib = libopenblt_dep
+openblt_core = openblt_core_dep
+openblt_target = openblt_target_dep
