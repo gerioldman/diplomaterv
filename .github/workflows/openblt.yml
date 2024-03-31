@@ -36,5 +36,5 @@ jobs:
           with:
             action: build
             directory: build
-            setup-options: --cross-file=arm-gcc-none-eabi.ini
+            setup-options: --cross-file=arm-gcc-none-eabi.ini -Dopenblt:build_on_CI=true
             meson-version: 1.4.0
