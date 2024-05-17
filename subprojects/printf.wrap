@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/eyalroz/printf.git
+revision = head
+depth = 1
+method = cmake
+[provide]
+printf = printf_dep
