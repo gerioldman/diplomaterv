@@ -2,6 +2,27 @@
 \chapter{\bevezetes}
 %----------------------------------------------------------------------------
 
-A bevezető tartalmazza a diplomaterv-kiírás elemzését, történelmi előzményeit, a feladat indokoltságát (a motiváció leírását), az eddigi megoldásokat, és ennek tükrében a hallgató megoldásának összefoglalását.
+\section*{Témaválasztás indoklása}\addcontentsline{toc}{section}{Témaválasztás indoklása}
 
-A bevezető szokás szerint a diplomaterv felépítésével záródik, azaz annak rövid leírásával, hogy melyik fejezet mivel foglalkozik.
+Beágyazott rendszerekre való fejlesztés során gyakran csak utólagosan merül fel a tesztek írásának gondolata, amelynek hatására a fejlesztés nagy része debuggolással telik, régi funkciókat gyakran rontunk el új funkciók beépítésével, Unit tesztelés hiánya miatt nincsenek jól elhatárolt szoftverkomponensek, emiatt keverednek a felelősségek a létező szoftverkomponensek között. Nem véletlen, hogy a biztonság kritikus rendszereket szabályzó szabványok, mint az ISO-26262 vagy DO-178C, megkövetelik a szoftverkomponensek Unit tesztelését. \cite{Szakdolgozat} 
+
+Előző félévekben készült munkákban több, a beágyozott szoftvert fejlesztők munkáját megkönnyítő megoldás készült: egy unit test keretrendszer, Python nyelven írodott Mock generátor és egy VSCode extension, ami megegyszerűsíti egy projekt felépítését, azzal, hogy egy Meson build rendszer vázat generál, amiben már automatikusan működik a unit tesztek fordítása és futtatása a hoszt gépen. A célhardveren való futtatáshoz még egy további feladat megoldására van szükség a felhasználótól, a mikrokontroller és a futtató PC közötti kommunikációt kell megoldani, erre egy példát is mutattam a JLink debugger RTT funkciójával \cite{SeggerRTT}, ami egy memórián keresztüli kommunikációt valósít meg.
+
+A kész megoldás mentén már lehetséges egy saját fejlesztői környezetben gyorsan és egyszerűen teszteket írni és futtatni, de a legtöbb projekt, ahol indokolt az ilyen típusú szoftverfejlesztés, ott csoportmunka szükséges. Ez gyakorlatban azt jelenti, hogy egy a projekt kódbázisát, hozzá tartozó teszteket egy verziókezelőn tároljuk és használjuk, például Git-en vagy SVN-en. Felmerülhet az igény, hogy minden változtatásra a szoftverben, vagyis minden commit esetén futtassuk le a megírt teszteket, hogy megbizonyosudjunk arról, hogy a változtatásnak nincsen nem várt hatása. Ezt hívják Continous Integration-nek (CI). A beágyozott szoftverfejlesztéskor tehát a következő igényeink lehetnek, hogy a CI milyen feladatokat végezzen el:
+\begin{itemize}
+	\item Unit tesztek futtatása hoszt környezetben
+	\item Unit tesztek futtatása célhardveren
+	\item Kódanalizátorok futtatása
+	\item Beágyazott eszközre kerülő szoftver fordítása
+	\item Funkcionális tesztek futtatása
+\end{itemize}
+
+A fentiek közül a hardvert nem igénylő feladatok könnyen megoldhatóak, akár párhuzamosan is külön Docker konténerekben. A célhardveren való tesztfuttatás viszont már nagyobb fejfájást okozhat a fejlesztőknek. Itt több feladatot is megoldásra vár. Először is a tesztprogram letöltését a hardverre. Ez az előző megoldás alapján egyszerűen megtehető egy debugger használatával. A következő feladat az eredmények kiolvasása, ami ugyanúgy megoldható debugger segítségével. 
+
+Első látszatra ez elegendőnek tűnhet mindez, és kisebb projektek számára meg is felelhet, viszont több probléma is felmerülhet. Az eredeti igény az volt, hogy lehetőleg minden változásra futtatva legyenek a tesztek. Nagyobb projekteknél, vagy akár céges szinten több projekten megosztva nagyon sok ilyen tesztfuttatás történne, és ahhoz hogy ezek a tesztfuttatások párhuzamosan történjenek, sok tesztfuttató hardver szükséges, hogy ne kelljen ezek eredményére sokat várni. Ebből következik, hogy ugyanennyi debugger-t is kell vásárolnunk. Néhány architektúra esetében ez nagyon költséges lenne, akár több ezer euró is lehet egy debugger, licensz árakat nem is említve (például Lauterbach az Infineon TriCore architektúrához).
+
+A másik probléma, hogy előfordulhatnak futtatás közbeni hibák, például expection, stack corruption/overflow. Ha az ilyen helyzeteket nem kezeljük, akkor a felhasználónak nagyon kevés információja lesz a hibáról. Emiatt szükség van egy olyan megoldásra, ami mindent megtesz, hogy egy elszigetelt környezetben(például memória védelem használata, stack figyelés) fusson a teszt, és hiba esetén képes legyen jelezni a hiba okát.
+
+\section*{Célkitűzés}\addcontentsline{toc}{section}{Célkitűzés}
+
+A dolgozat célja tehát egy olyan környezet létrehozása, ami képes tetszőleges kommunikációs interfészen fogadni tesztprogramot (bootloader), meg tudja különböztetni a teszt és futtatókörnyezetben történő hibákat, és erről hibajelzést is tud adni a kliens felé. Ez azt is jelenti, hogy egy kliens alkalmazásnak is kell léteznie, amin keresztül a felhasználó kapcsolatot képes létesíteni a tesztfuttató hardverrel.
