@@ -8,4 +8,4 @@ opentestloader = executable(
     ]
 )
 
-meson.override_program('opentestloader',opentestloader)
+meson.override_find_program('opentestloader',opentestloader)
