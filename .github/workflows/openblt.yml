@@ -1,4 +1,4 @@
-name: Build on Host
+name: Build
 on:
     push:
       branches: [ main ]
